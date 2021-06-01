@@ -1,31 +1,35 @@
 package com.example.springWebApp.domain;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+
+import static javax.persistence.GenerationType.*;
 
 
 @Entity
 public class Author {
 
+    private String firstName;
+    private String lastName;
+    public Author(){}
+
+
+    @ManyToMany(mappedBy = "authors")
+    private Set<Book> books = new HashSet<>();
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO);
-    public Author(String firstName, String lastName, Set<Book> books) {
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+
+    public Author(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.books = books;
-
     }
 
 
-    private Long id;
-    private String firstName;
-
-    private String lastName;
-
-    @ManyToMany(mappedBy = "authors")
-    private Set<Book> books;
-
-public Author(){}
 
     public Long getId() {
         return id;
@@ -75,7 +79,7 @@ public Author(){}
 
         Author author = (Author) o;
 
-        return id != null ? id.equals(author.id) : author.id == null;
+        return Objects.equals(id, author.id);
     }
 
     @Override
